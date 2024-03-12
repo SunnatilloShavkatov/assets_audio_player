@@ -1,5 +1,6 @@
 package com.github.florent37.assets_audio_player
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
@@ -10,6 +11,7 @@ class UriResolver(private val context: Context) {
         const val PREFIX_CONTENT = "content://media"
     }
 
+    @SuppressLint("Range")
     private fun contentPath(uri: Uri, columnName: String): String? {
         return context.contentResolver?.query(
                 uri,
