@@ -1,5 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 
 import 'player/PlayingControls.dart';
 

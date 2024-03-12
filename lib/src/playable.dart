@@ -115,7 +115,7 @@ class Metas {
     this.extra,
     this.onImageLoadFail,
   }) {
-    id ??= Uuid().v4();
+    id ??= const Uuid().v4();
   }
 
   @override
@@ -323,9 +323,9 @@ class Audio extends Playable {
       extra: extra,
       image: image,
     );
-    super.currentlyOpenedIn.forEach((playerEditor) {
+    for (var playerEditor in super.currentlyOpenedIn) {
       playerEditor.onAudioMetasUpdated(this);
-    });
+    }
   }
 
   Audio copyWith({
@@ -388,9 +388,9 @@ class Playlist extends Playable {
   Playlist add(Audio audio) {
     audios.add(audio);
     final index = audios.length - 1;
-    super.currentlyOpenedIn.forEach((playerEditor) {
+    for (var playerEditor in super.currentlyOpenedIn) {
       playerEditor.onAudioAddedAt(index);
-    });
+    }
     return this;
   }
 
@@ -398,9 +398,9 @@ class Playlist extends Playable {
     if (index >= 0) {
       if (index < audios.length) {
         audios.insert(index, audio);
-        super.currentlyOpenedIn.forEach((playerEditor) {
+        for (var playerEditor in super.currentlyOpenedIn) {
           playerEditor.onAudioAddedAt(index);
-        });
+        }
       } else {
         return add(audio);
       }
@@ -414,9 +414,9 @@ class Playlist extends Playable {
       final oldElement = audios.elementAt(index);
       final newElement = replacer(oldElement);
       audios[index] = newElement;
-      super.currentlyOpenedIn.forEach((playerEditor) {
+      for (var playerEditor in super.currentlyOpenedIn) {
         playerEditor.onAudioReplacedAt(index, keepPlayingPositionIfCurrent);
-      });
+      }
     }
     return this;
   }
@@ -429,18 +429,18 @@ class Playlist extends Playable {
   bool remove(Audio audio) {
     final index = audios.indexOf(audio);
     final removed = audios.remove(audio);
-    super.currentlyOpenedIn.forEach((playerEditor) {
+    for (var playerEditor in super.currentlyOpenedIn) {
       playerEditor.onAudioRemovedAt(index);
-    });
+    }
     // here maybe stop the player if playing this index
     return removed;
   }
 
   Audio removeAtIndex(int index) {
     final removedAudio = audios.removeAt(index);
-    super.currentlyOpenedIn.forEach((playerEditor) {
+    for (var playerEditor in super.currentlyOpenedIn) {
       playerEditor.onAudioRemovedAt(index);
-    });
+    }
     return removedAudio;
   }
 

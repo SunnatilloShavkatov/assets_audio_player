@@ -126,19 +126,19 @@ class AssetsAudioPlayer {
 
   AssetsAudioPlayerCache _audioPlayerCache = defaultAssetsAudioPlayerCache;
 
-  static final double minVolume = 0.0;
-  static final double maxVolume = 1.0;
-  static final double minPlaySpeed = 0.0;
-  static final double maxPlaySpeed = 16.0;
-  static final double defaultVolume = maxVolume;
-  static final double defaultPlaySpeed = 1.0;
-  static final double minPitch = 0.0;
-  static final double maxPitch = 16.0;
-  static final double defaultPitch = 1.0;
-  static final AudioFocusStrategy defaultFocusStrategy =
+  static const double minVolume = 0.0;
+  static const double maxVolume = 1.0;
+  static const double minPlaySpeed = 0.0;
+  static const double maxPlaySpeed = 16.0;
+  static const double defaultVolume = maxVolume;
+  static const double defaultPlaySpeed = 1.0;
+  static const double minPitch = 0.0;
+  static const double maxPitch = 16.0;
+  static const double defaultPitch = 1.0;
+  static const AudioFocusStrategy defaultFocusStrategy =
   AudioFocusStrategy.request(resumeAfterInterruption: true);
-  static final NotificationSettings defaultNotificationSettings =
-  const NotificationSettings();
+  static const NotificationSettings defaultNotificationSettings =
+  NotificationSettings();
 
   //region notification click
   static MethodChannel _notificationOpenChannel =
@@ -181,7 +181,7 @@ class AssetsAudioPlayer {
 
   //endregion
 
-  static final uuid = Uuid();
+  static const uuid = Uuid();
 
   /// The channel between the native and Dart
   final MethodChannel _sendChannel = const MethodChannel('assets_audio_player');
@@ -966,13 +966,13 @@ class AssetsAudioPlayer {
   /// Converts a number to duration
   Duration _toDuration(num value) {
     if (value.isNaN) {
-      return Duration(milliseconds: 0);
+      return const Duration(milliseconds: 0);
     } else if (value is int) {
       return Duration(milliseconds: value);
     } else if (value is double) {
       return Duration(milliseconds: value.round());
     } else {
-      return Duration();
+      return const Duration();
     }
   }
 
@@ -1022,11 +1022,11 @@ class AssetsAudioPlayer {
     required AudioFocusStrategy? audioFocusStrategy,
     required NotificationSettings? notificationSettings,
   }) async {
-    final _autoStart = autoStart ?? _DEFAULT_AUTO_START;
-    final _loopMode = loopMode ?? _DEFAULT_LOOP_MODE;
-    final _audioFocusStrategy = audioFocusStrategy ?? defaultFocusStrategy;
+    final autoStart0 = autoStart ?? _DEFAULT_AUTO_START;
+    final loopMode0 = loopMode ?? _DEFAULT_LOOP_MODE;
+    final audioFocusStrategy0 = audioFocusStrategy ?? defaultFocusStrategy;
     final currentAudio = _lastOpenedAssetsAudio;
-    final _headPhoneStrategy = headPhoneStrategy ?? _DEFAULT_HEADPHONE_STRATEGY;
+    final headPhoneStrategy0 = headPhoneStrategy ?? _DEFAULT_HEADPHONE_STRATEGY;
     if (audioInput != null) {
       _respectSilentMode = respectSilentMode ?? _DEFAULT_RESPECT_SILENT_MODE;
       _showNotification = showNotification ?? _DEFAULT_SHOW_NOTIFICATION;
@@ -1041,10 +1041,10 @@ class AssetsAudioPlayer {
           'id': id,
           'audioType': audioTypeDescription(audio.audioType),
           'path': audio.path,
-          'autoStart': _autoStart,
+          'autoStart': autoStart0,
           'respectSilentMode': _respectSilentMode,
-          'headPhoneStrategy': describeHeadPhoneStrategy(_headPhoneStrategy),
-          'audioFocusStrategy': describeAudioFocusStrategy(_audioFocusStrategy),
+          'headPhoneStrategy': describeHeadPhoneStrategy(headPhoneStrategy0),
+          'audioFocusStrategy': describeAudioFocusStrategy(audioFocusStrategy0),
           'displayNotification': _showNotification,
           'volume': forcedVolume ?? volume.valueOrNull ?? defaultVolume,
           'playSpeed': playSpeed ??
@@ -1079,7 +1079,7 @@ class AssetsAudioPlayer {
         }
 
         //region notifs
-        final notifSettings = notificationSettings ?? NotificationSettings();
+        final notifSettings = notificationSettings ?? const NotificationSettings();
         writeNotificationSettingsInto(params, notifSettings);
         //endregion
 
@@ -1089,7 +1089,7 @@ class AssetsAudioPlayer {
 
         await _sendChannel.invokeMethod('open', params);
 
-        await setLoopMode(_loopMode);
+        await setLoopMode(loopMode0);
 
         _stopped = false;
         _playlistFinished.add(false);
@@ -1100,7 +1100,7 @@ class AssetsAudioPlayer {
           currentPosition: currentPosition.value,
           playlist: _playlist?.playlist,
           playlistIndex: _playlist?.playlistIndex,
-          error: AssetsAudioPlayerError(
+          error: const AssetsAudioPlayerError(
             errorType: AssetsAudioPlayerErrorType.Player, message: '',),
         );
         if (onErrorDo != null) {
@@ -1378,7 +1378,7 @@ class AssetsAudioPlayer {
     if (playing != null) {
       final totalDuration = playing.audio.duration;
 
-      final currentPosition = this.currentPosition.valueOrNull ?? Duration();
+      final currentPosition = this.currentPosition.valueOrNull ?? const Duration();
 
       if (by.inMilliseconds >= 0) {
         final nextPosition = currentPosition + by;
@@ -1392,7 +1392,7 @@ class AssetsAudioPlayer {
         await seek(currentPositionCapped);
       } else {
         // only if playing a song
-        final currentPosition = this.currentPosition.valueOrNull ?? Duration();
+        final currentPosition = this.currentPosition.valueOrNull ?? const Duration();
         final nextPosition = currentPosition + by;
 
         // don't seek less that 0

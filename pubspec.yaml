@@ -33,7 +33,3 @@ flutter:
         pluginClass: AssetsAudioPlayerPlugin
       web:
         default_package: assets_audio_player_web
-      # moved to assets_audio_player_web
-      # web:
-      #  pluginClass: AssetsAudioPlayerPlugin
-      #  fileName: assets_audio_player_web.dart

@@ -2,7 +2,7 @@ group 'com.github.florent37.assets_audio_player'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.21'
+    ext.kotlin_version = '1.9.10'
     repositories {
         google()
         mavenCentral()
@@ -26,10 +26,8 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdk 34
+    namespace 'com.github.florent37.assets_audio_player'
 
-    if (project.android.hasProperty("namespace")) {
-        namespace 'com.github.florent37.assets_audio_player'
-    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -44,6 +42,7 @@ android {
     packagingOptions {
         exclude "DebugProbesKt.bin"
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

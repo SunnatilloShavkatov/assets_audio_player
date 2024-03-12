@@ -274,13 +274,13 @@ class AssetsAudioPlayerGroup {
   }
 
   void dispose() {
-    _subscriptions.forEach((element) {
+    for (var element in _subscriptions) {
       element.cancel();
-    });
+    }
     _subscriptions.clear();
-    players.forEach((element) {
+    for (var element in players) {
       element.dispose();
-    });
+    }
 
     _isPlaying.close();
   }

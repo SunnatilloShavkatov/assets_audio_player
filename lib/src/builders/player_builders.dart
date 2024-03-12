@@ -41,66 +41,56 @@ class PlayerBuilder extends StatefulWidget {
   final _PlayingBuilderType builderType;
 
   const PlayerBuilder.isPlaying(
-      {Key? key, required this.player, required PlayingWidgetBuilder builder})
+      {super.key, required this.player, required PlayingWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.isPlaying,
-        super(key: key);
+        builderType = _PlayingBuilderType.isPlaying;
 
   const PlayerBuilder.isBuffering(
-      {Key? key, required this.player, required PlayingWidgetBuilder builder})
+      {super.key, required this.player, required PlayingWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.isBuffering,
-        super(key: key);
+        builderType = _PlayingBuilderType.isBuffering;
 
   const PlayerBuilder.loopMode(
-      {Key? key, required this.player, required LoopModeWidgetBuilder builder})
+      {super.key, required this.player, required LoopModeWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.loopMode,
-        super(key: key);
+        builderType = _PlayingBuilderType.loopMode;
 
   const PlayerBuilder.realtimePlayingInfos(
-      {Key? key, required this.player, required RealtimeWidgetBuilder builder})
+      {super.key, required this.player, required RealtimeWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.realtimePlayingInfos,
-        super(key: key);
+        builderType = _PlayingBuilderType.realtimePlayingInfos;
 
   const PlayerBuilder.volume(
-      {Key? key, required this.player, required VolumeWidgetBuilder builder})
+      {super.key, required this.player, required VolumeWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.volume,
-        super(key: key);
+        builderType = _PlayingBuilderType.volume;
 
   const PlayerBuilder.playSpeed(
-      {Key? key, required this.player, required PlaySpeedWidgetBuilder builder})
+      {super.key, required this.player, required PlaySpeedWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.playSpeed,
-        super(key: key);
+        builderType = _PlayingBuilderType.playSpeed;
 
   const PlayerBuilder.currentPosition(
-      {Key? key, required this.player, required PositionWidgetBuilder builder})
+      {super.key, required this.player, required PositionWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.currentPosition,
-        super(key: key);
+        builderType = _PlayingBuilderType.currentPosition;
 
   const PlayerBuilder.forwardRewindSpeed(
-      {Key? key,
+      {super.key,
       required this.player,
       ForwardRewindSpeedWidgetBuilder? builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.forwardRewindSpeed,
-        super(key: key);
+        builderType = _PlayingBuilderType.forwardRewindSpeed;
 
   const PlayerBuilder.current(
-      {Key? key, required this.player, required CurrentWidgetBuilder builder})
+      {super.key, required this.player, required CurrentWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.current,
-        super(key: key);
+        builderType = _PlayingBuilderType.current;
 
   const PlayerBuilder.playerState(
-      {Key? key, required this.player, required PlayerStateBuilder builder})
+      {super.key, required this.player, required PlayerStateBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.playerState,
-        super(key: key);
+        builderType = _PlayingBuilderType.playerState;
 
   @override
   _PlayerBuilderState createState() => _PlayerBuilderState();
@@ -126,7 +116,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -138,7 +128,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -150,7 +140,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -162,7 +152,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -174,7 +164,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -185,7 +175,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -196,7 +186,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -207,7 +197,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -219,7 +209,7 @@ class _PlayerBuilderState extends State<PlayerBuilder> {
             if (snap.hasData) {
               return widget.builder(context, snap.data)!;
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           },
         );
@@ -233,10 +223,9 @@ class PlayerGroupBuilder extends StatefulWidget {
   final _PlayingBuilderType builderType;
 
   const PlayerGroupBuilder.isPlaying(
-      {Key? key, required this.player, required PlayingWidgetBuilder builder})
+      {super.key, required this.player, required PlayingWidgetBuilder builder})
       : builder = builder,
-        builderType = _PlayingBuilderType.isPlaying,
-        super(key: key);
+        builderType = _PlayingBuilderType.isPlaying;
 
   @override
   _PlayerBuilderGroupState createState() => _PlayerBuilderGroupState();
@@ -256,6 +245,6 @@ class _PlayerBuilderGroupState extends State<PlayerGroupBuilder> {
         );
       default: /* do nothing */
     }
-    return SizedBox();
+    return const SizedBox();
   }
 }
