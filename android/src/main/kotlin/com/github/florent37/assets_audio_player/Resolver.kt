@@ -14,23 +14,24 @@ class UriResolver(private val context: Context) {
     @SuppressLint("Range")
     private fun contentPath(uri: Uri, columnName: String): String? {
         return context.contentResolver?.query(
-                uri,
-                arrayOf(
-                        columnName
-                ),
-                null,
-                null,
-                null)
-                ?.use { cursor ->
-                    cursor.takeIf { it.count == 1 }?.let {
-                        it.moveToFirst()
-                        it.getString(cursor.getColumnIndex(columnName))
-                    }
+            uri,
+            arrayOf(
+                columnName
+            ),
+            null,
+            null,
+            null
+        )
+            ?.use { cursor ->
+                cursor.takeIf { it.count == 1 }?.let {
+                    it.moveToFirst()
+                    it.getString(cursor.getColumnIndex(columnName))
                 }
+            }
     }
 
     fun audioPath(uri: String?): String? {
-        if(uri != null) {
+        if (uri != null) {
             try {
                 if (uri.startsWith(PREFIX_CONTENT)) {
                     val uriParsed = Uri.parse(uri)
@@ -44,7 +45,7 @@ class UriResolver(private val context: Context) {
     }
 
     fun imagePath(uri: String?): String? {
-        if(uri != null) {
+        if (uri != null) {
             try {
                 if (uri.startsWith(PREFIX_CONTENT)) {
                     val uriParsed = Uri.parse(uri)

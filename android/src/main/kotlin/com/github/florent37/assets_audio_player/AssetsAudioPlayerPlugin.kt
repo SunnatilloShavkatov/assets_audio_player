@@ -51,7 +51,7 @@ class AssetsAudioPlayerPlugin : FlutterPlugin, PluginRegistry.NewIntentListener,
 
     var assetsAudioPlayer: AssetsAudioPlayer? = null
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if(instance != null)return // bug fix
         instance = this
         notificationChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "assets_audio_player_notification")
@@ -63,12 +63,12 @@ class AssetsAudioPlayerPlugin : FlutterPlugin, PluginRegistry.NewIntentListener,
         assetsAudioPlayer!!.register();
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         assetsAudioPlayer?.unregister()
         instance = null
     }
 
-    private fun sendNotificationPayloadMessage(intent: Intent): Boolean? {
+    private fun sendNotificationPayloadMessage(intent: Intent): Boolean {
         if (NotificationAction.ACTION_SELECT == intent.action) {
             val trackId = intent.getStringExtra(NotificationService.TRACK_ID)
             notificationChannel?.invokeMethod("selectNotification", trackId)
@@ -78,10 +78,8 @@ class AssetsAudioPlayerPlugin : FlutterPlugin, PluginRegistry.NewIntentListener,
     }
 
     override fun onNewIntent(intent: Intent): Boolean {
-        if (intent == null)
-            return false
         if (!intent.getBooleanExtra("isVisited", false)) {
-            val res = sendNotificationPayloadMessage(intent) ?: false
+            val res = sendNotificationPayloadMessage(intent)
             if (res && myActivity != null) {
                 myActivity?.intent = intent
                 intent.putExtra("isVisited", true)

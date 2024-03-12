@@ -6,7 +6,7 @@ import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
 
-class StopWhenCallAudioFocus(private val context: Context) : StopWhenCall() {
+class StopWhenCallAudioFocus(context: Context) : StopWhenCall() {
 
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 

@@ -17,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class PlayerImplemTesterMediaPlayer : PlayerImplemTester {
 
-    private var mediaPlayer :PlayerImplemMediaPlayer? = null
+    private var mediaPlayer: PlayerImplemMediaPlayer? = null
 
 
     private fun mapError(t: Throwable): AssetAudioPlayerThrowable {
@@ -26,54 +26,54 @@ class PlayerImplemTesterMediaPlayer : PlayerImplemTester {
 
 
     override suspend fun open(configuration: PlayerFinderConfiguration): PlayerFinder.PlayerWithDuration {
-        if(AssetsAudioPlayerPlugin.displayLogs) {
+        if (AssetsAudioPlayerPlugin.displayLogs) {
             Log.d("PlayerImplem", "trying to open with native mediaplayer")
         }
         val mediaPlayer = PlayerImplemMediaPlayer(
-                onFinished = {
-                    configuration.onFinished?.invoke()
-                    //stop(pingListener = false)
-                },
-                onBuffering = {
-                    configuration.onBuffering?.invoke(it)
-                },
-                onError = { t ->
-                    configuration.onError?.invoke(mapError(t))
-                }
+            onFinished = {
+                configuration.onFinished?.invoke()
+                //stop(pingListener = false)
+            },
+            onBuffering = {
+                configuration.onBuffering?.invoke(it)
+            },
+            onError = { t ->
+                configuration.onError?.invoke(mapError(t))
+            }
         )
         try {
-            val durationMS = mediaPlayer?.open(
-                    context = configuration.context,
-                    assetAudioPath = configuration.assetAudioPath,
-                    audioType = configuration.audioType,
-                    assetAudioPackage = configuration.assetAudioPackage,
-                    networkHeaders = configuration.networkHeaders,
-                    flutterAssets = configuration.flutterAssets,
-                    drmConfiguration = configuration.drmConfiguration
+            val durationMS = mediaPlayer.open(
+                context = configuration.context,
+                assetAudioPath = configuration.assetAudioPath,
+                audioType = configuration.audioType,
+                assetAudioPackage = configuration.assetAudioPackage,
+                networkHeaders = configuration.networkHeaders,
+                flutterAssets = configuration.flutterAssets,
+                drmConfiguration = configuration.drmConfiguration
             )
             return PlayerFinder.PlayerWithDuration(
-                    player = mediaPlayer!!,
-                    duration = durationMS!!
+                player = mediaPlayer,
+                duration = durationMS
             )
         } catch (t: Throwable) {
-            if(AssetsAudioPlayerPlugin.displayLogs) {
+            if (AssetsAudioPlayerPlugin.displayLogs) {
                 Log.d("PlayerImplem", "failed to open with native mediaplayer")
             }
 
-            mediaPlayer?.release()
-            throw  t
+            mediaPlayer.release()
+            throw t
         }
     }
 }
 
 class PlayerImplemMediaPlayer(
-        onFinished: (() -> Unit),
-        onBuffering: ((Boolean) -> Unit),
-        onError: ((Throwable) -> Unit)
+    onFinished: (() -> Unit),
+    onBuffering: ((Boolean) -> Unit),
+    onError: ((Throwable) -> Unit)
 ) : PlayerImplem(
-        onFinished = onFinished,
-        onBuffering = onBuffering,
-        onError = onError
+    onFinished = onFinished,
+    onBuffering = onBuffering,
+    onError = onError
 ) {
     private var mediaPlayer: MediaPlayer? = null
 
@@ -109,13 +109,13 @@ class PlayerImplemMediaPlayer(
     }
 
     override suspend fun open(
-            context: Context,
-            flutterAssets: FlutterPlugin.FlutterAssets,
-            assetAudioPath: String?,
-            audioType: String,
-            networkHeaders: Map<*, *>?,
-            assetAudioPackage: String?,
-            drmConfiguration: Map<*, *>?
+        context: Context,
+        flutterAssets: FlutterPlugin.FlutterAssets,
+        assetAudioPath: String?,
+        audioType: String,
+        networkHeaders: Map<*, *>?,
+        assetAudioPackage: String?,
+        drmConfiguration: Map<*, *>?
     ): DurationMS = withContext(Dispatchers.IO) {
         suspendCoroutine<DurationMS> { continuation ->
             var onThisMediaReady = false
@@ -132,14 +132,20 @@ class PlayerImplemMediaPlayer(
                         mediaPlayer?.setDataSource(assetAudioPath)
                     }
                 }
+
                 Player.AUDIO_TYPE_FILE -> {
                     mediaPlayer?.reset();
                     mediaPlayer?.setDataSource(context, Uri.parse("file:///$assetAudioPath"))
                 }
+
                 else -> { //asset
                     context.assets.openFd("flutter_assets/$assetAudioPath").also {
                         mediaPlayer?.reset();
-                        mediaPlayer?.setDataSource(it.fileDescriptor, it.startOffset, it.declaredLength)
+                        mediaPlayer?.setDataSource(
+                            it.fileDescriptor,
+                            it.startOffset,
+                            it.declaredLength
+                        )
                     }.close()
                 }
             }
@@ -154,11 +160,12 @@ class PlayerImplemMediaPlayer(
                 //    MEDIA_ERROR_UNSUPPORTED
                 //    MEDIA_ERROR_TIMED_OUT
                 //    MEDIA_ERROR_SYSTEM - low-level system error.
-                val error = if (what == MEDIA_ERROR_SERVER_DIED || extra == MEDIA_ERROR_IO || extra == MEDIA_ERROR_TIMED_OUT) {
-                    AssetAudioPlayerThrowable.NetworkError(Throwable(extra.toString()))
-                } else {
-                    AssetAudioPlayerThrowable.PlayerError(Throwable(extra.toString()))
-                }
+                val error =
+                    if (what == MEDIA_ERROR_SERVER_DIED || extra == MEDIA_ERROR_IO || extra == MEDIA_ERROR_TIMED_OUT) {
+                        AssetAudioPlayerThrowable.NetworkError(Throwable(extra.toString()))
+                    } else {
+                        AssetAudioPlayerThrowable.PlayerError(Throwable(extra.toString()))
+                    }
 
                 if (!onThisMediaReady) {
                     continuation.resumeWithException(error)

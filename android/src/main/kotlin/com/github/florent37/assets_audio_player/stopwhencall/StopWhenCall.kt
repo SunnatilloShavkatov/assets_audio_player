@@ -24,11 +24,11 @@ abstract class StopWhenCall {
 
     protected fun pingListeners(audioState: AudioState) {
         listeners.forEach {
-            it.onPhoneStateChanged(audioState= audioState)
+            it.onPhoneStateChanged(audioState = audioState)
         }
     }
 
-    abstract fun requestAudioFocus(audioFocusStrategy: AudioFocusStrategy) : StopWhenCall.AudioState
+    abstract fun requestAudioFocus(audioFocusStrategy: AudioFocusStrategy): AudioState
     abstract fun stop()
 }
 
