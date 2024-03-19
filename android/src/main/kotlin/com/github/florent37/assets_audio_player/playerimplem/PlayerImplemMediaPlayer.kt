@@ -7,7 +7,7 @@ import android.net.Uri
 import android.util.Log
 import com.github.florent37.assets_audio_player.AssetAudioPlayerThrowable
 import com.github.florent37.assets_audio_player.AssetsAudioPlayerPlugin
-import com.github.florent37.assets_audio_player.Player
+import com.github.florent37.assets_audio_player.AssetsPlayer
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -123,7 +123,7 @@ class PlayerImplemMediaPlayer(
             this@PlayerImplemMediaPlayer.mediaPlayer = MediaPlayer()
 
             when (audioType) {
-                Player.AUDIO_TYPE_NETWORK, Player.AUDIO_TYPE_LIVESTREAM -> {
+                AssetsPlayer.AUDIO_TYPE_NETWORK, AssetsPlayer.AUDIO_TYPE_LIVESTREAM -> {
                     mediaPlayer?.reset()
                     networkHeaders?.toMapString()?.let {
                         mediaPlayer?.setDataSource(context, Uri.parse(assetAudioPath), it)
@@ -133,7 +133,7 @@ class PlayerImplemMediaPlayer(
                     }
                 }
 
-                Player.AUDIO_TYPE_FILE -> {
+                AssetsPlayer.AUDIO_TYPE_FILE -> {
                     mediaPlayer?.reset();
                     mediaPlayer?.setDataSource(context, Uri.parse("file:///$assetAudioPath"))
                 }

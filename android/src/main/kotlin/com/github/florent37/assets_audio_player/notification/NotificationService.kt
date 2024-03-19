@@ -16,7 +16,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
-import com.google.android.exoplayer2.C
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +25,7 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.RequiresApi
+import androidx.media3.common.C
 import com.github.florent37.assets_audio_player.AssetsAudioPlayerPlugin
 import com.github.florent37.assets_audio_player.R
 
@@ -195,7 +195,7 @@ class NotificationService : Service() {
             context,
             manifestIcon,
             null,
-            com.google.android.exoplayer2.R.drawable.exo_icon_circular_play
+            androidx.loader.R.drawable.notification_template_icon_bg
         )
     }
 
@@ -204,7 +204,7 @@ class NotificationService : Service() {
             context,
             manifestIconPlay,
             resourceName,
-            com.google.android.exoplayer2.R.drawable.exo_icon_play
+            androidx.loader.R.drawable.notification_template_icon_bg
         )
     }
 
@@ -213,7 +213,8 @@ class NotificationService : Service() {
             context,
             manifestIconPause,
             resourceName,
-            com.google.android.exoplayer2.R.drawable.exo_icon_pause
+            androidx.loader.R.drawable.notification_template_icon_bg
+//            com.google.android.exoplayer2.R.drawable.exo_icon_pause
         )
     }
 
@@ -222,7 +223,8 @@ class NotificationService : Service() {
             context,
             manifestIconNext,
             resourceName,
-            com.google.android.exoplayer2.R.drawable.exo_icon_next
+            androidx.loader.R.drawable.notification_template_icon_bg
+//            com.google.android.exoplayer2.R.drawable.exo_icon_next
         )
     }
 
@@ -231,7 +233,8 @@ class NotificationService : Service() {
             context,
             manifestIconPrev,
             resourceName,
-            com.google.android.exoplayer2.R.drawable.exo_icon_previous
+            androidx.loader.R.drawable.notification_template_icon_bg
+//            com.google.android.exoplayer2.R.drawable.exo_icon_previous
         )
     }
 
@@ -240,7 +243,8 @@ class NotificationService : Service() {
             context,
             manifestIconStop,
             resourceName,
-            com.google.android.exoplayer2.R.drawable.exo_icon_stop
+            androidx.loader.R.drawable.notification_template_icon_bg
+//            com.google.android.exoplayer2.R.drawable.exo_icon_stop
         )
     }
 

@@ -3,23 +3,37 @@ package com.github.florent37.assets_audio_player.playerimplem
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL
 import android.util.Log
+import androidx.annotation.OptIn
+import androidx.media3.common.C
+import androidx.media3.common.C.AUDIO_SESSION_ID_UNSET
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.common.Player.REPEAT_MODE_OFF
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.AssetDataSource
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DataSpec
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.ExoPlaybackException
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.dash.DashMediaSource
+import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.smoothstreaming.SsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.extractor.DefaultExtractorsFactory
+import androidx.media3.extractor.ts.AdtsExtractor
 import com.github.florent37.assets_audio_player.AssetAudioPlayerThrowable
 import com.github.florent37.assets_audio_player.AssetsAudioPlayerPlugin
-import com.github.florent37.assets_audio_player.Player
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.C.AUDIO_SESSION_ID_UNSET
-import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
-import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
-import com.google.android.exoplayer2.drm.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.dash.DashMediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.upstream.*
+import com.github.florent37.assets_audio_player.AssetsPlayer
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.io.File
 import kotlin.coroutines.resume
@@ -45,7 +59,7 @@ class PlayerImplemTesterExoPlayer(private val type: Type) : PlayerImplemTester {
             Log.d("PlayerImplem", "trying to open with exoplayer($type)")
         }
         //some type are only for web
-        if (configuration.audioType != Player.AUDIO_TYPE_LIVESTREAM && configuration.audioType != Player.AUDIO_TYPE_LIVESTREAM) {
+        if (configuration.audioType != AssetsPlayer.AUDIO_TYPE_LIVESTREAM && configuration.audioType != AssetsPlayer.AUDIO_TYPE_LIVESTREAM) {
             if (type == Type.HLS || type == Type.DASH || type == Type.SmoothStreaming) {
                 throw IncompatibleException(configuration.audioType, type)
             }
@@ -105,7 +119,7 @@ class PlayerImplemExoPlayer(
     override var loopSingleAudio: Boolean
         get() = mediaPlayer?.repeatMode == REPEAT_MODE_ALL
         set(value) {
-            mediaPlayer?.repeatMode = if (value) REPEAT_MODE_ALL else REPEAT_MODE_OFF
+            mediaPlayer?.repeatMode = if (value) Player.REPEAT_MODE_ALL else REPEAT_MODE_OFF
         }
 
     override val isPlaying: Boolean
@@ -125,6 +139,7 @@ class PlayerImplemExoPlayer(
         mediaPlayer?.playWhenReady = false
     }
 
+    @OptIn(UnstableApi::class)
     private fun getDataSource(
         context: Context,
         flutterAssets: FlutterPlugin.FlutterAssets,
@@ -137,7 +152,7 @@ class PlayerImplemExoPlayer(
         try {
             mediaPlayer?.stop()
             when (audioType) {
-                Player.AUDIO_TYPE_NETWORK, Player.AUDIO_TYPE_LIVESTREAM -> {
+                AssetsPlayer.AUDIO_TYPE_NETWORK, AssetsPlayer.AUDIO_TYPE_LIVESTREAM -> {
                     val uri = Uri.parse(assetAudioPath)
                     val mediaItem: MediaItem = MediaItem.fromUri(uri)
                     val userAgent = "assets_audio_player"
@@ -172,7 +187,7 @@ class PlayerImplemExoPlayer(
                     }.createMediaSource(mediaItem)
                 }
 
-                Player.AUDIO_TYPE_FILE -> {
+                AssetsPlayer.AUDIO_TYPE_FILE -> {
                     val uri = Uri.parse(assetAudioPath)
                     var mediaItem: MediaItem = MediaItem.fromUri(uri)
                     val factory = ProgressiveMediaSource
@@ -218,8 +233,9 @@ class PlayerImplemExoPlayer(
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun ExoPlayer.Builder.incrementBufferSize(audioType: String): ExoPlayer.Builder {
-        if (audioType == Player.AUDIO_TYPE_NETWORK || audioType == Player.AUDIO_TYPE_LIVESTREAM) {
+        if (audioType == AssetsPlayer.AUDIO_TYPE_NETWORK || audioType == AssetsPlayer.AUDIO_TYPE_LIVESTREAM) {
             /* Instantiate a DefaultLoadControl.Builder. */
             val loadControlBuilder = DefaultLoadControl.Builder()
 
@@ -261,6 +277,7 @@ class PlayerImplemExoPlayer(
         }
     }
 
+    @OptIn(UnstableApi::class)
     override suspend fun open(
         context: Context,
         flutterAssets: FlutterPlugin.FlutterAssets,
@@ -289,7 +306,7 @@ class PlayerImplemExoPlayer(
 
             var lastState: Int? = null
 
-            this.mediaPlayer?.addListener(object : com.google.android.exoplayer2.Player.Listener {
+            this.mediaPlayer?.addListener(object : Player.Listener {
 
                 override fun onPlayerError(error: PlaybackException) {
                     val errorMapped = mapError(error)
@@ -318,7 +335,7 @@ class PlayerImplemExoPlayer(
                                 if (!onThisMediaReady) {
                                     onThisMediaReady = true
                                     //retrieve duration in seconds
-                                    if (audioType == Player.AUDIO_TYPE_LIVESTREAM) {
+                                    if (audioType == AssetsPlayer.AUDIO_TYPE_LIVESTREAM) {
                                         continuation.resume(0) //no duration for livestream
                                     } else {
                                         val duration = mediaPlayer?.duration ?: 0
@@ -374,12 +391,13 @@ class PlayerImplemExoPlayer(
         }
     }
 
+    @OptIn(UnstableApi::class)
     override fun getSessionId(listener: (Int) -> Unit) {
         val id = mediaPlayer?.audioSessionId?.takeIf { it != AUDIO_SESSION_ID_UNSET }
         if (id != null) {
             listener(id)
         } else {
-            val listener = object : com.google.android.exoplayer2.Player.Listener {
+            val listener = object : Player.Listener {
                 override fun onAudioSessionIdChanged(audioSessionId: Int) {
                     listener(audioSessionId)
                     mediaPlayer?.removeListener(this)

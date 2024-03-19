@@ -17,7 +17,8 @@ dependencies:
   http: ^1.2.1
   provider: ^6.1.2
   file: ^7.0.0
-  assets_audio_player: any
+  assets_audio_player:
+    path: ../
 
 dev_dependencies:
   flutter_test:

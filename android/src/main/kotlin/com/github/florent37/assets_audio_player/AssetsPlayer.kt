@@ -1,7 +1,6 @@
 package com.github.florent37.assets_audio_player
 
 import android.content.Context
-import android.content.Intent
 import android.media.AudioManager
 import android.os.Handler
 import android.os.Message
@@ -24,7 +23,7 @@ import kotlin.math.min
 /**
  * Does not depend on Flutter, feel free to use it in all your projects
  */
-class Player(
+class AssetsPlayer(
     val id: String,
     private val context: Context,
     private val stopWhenCall: StopWhenCall,
@@ -221,7 +220,7 @@ class Player(
                 setPitch(pitch)
 
                 seek?.let {
-                    this@Player.seek(milliseconds = seek * 1L)
+                    this@AssetsPlayer.seek(milliseconds = seek * 1L)
                 }
 
                 if (autoStart) {
@@ -554,13 +553,13 @@ class ForwardHandler : Handler() {
         const val DELAY = 300L
     }
 
-    private var player: com.github.florent37.assets_audio_player.Player? = null
+    private var player: com.github.florent37.assets_audio_player.AssetsPlayer? = null
     private var speed: Double = 1.0
 
     val isActive: Boolean
         get() = hasMessages(MESSAGE_FORWARD)
 
-    fun start(player: com.github.florent37.assets_audio_player.Player, speed: Double) {
+    fun start(player: com.github.florent37.assets_audio_player.AssetsPlayer, speed: Double) {
         this.player = player
         this.speed = speed
         removeMessages(MESSAGE_FORWARD)
