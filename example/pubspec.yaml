@@ -4,8 +4,8 @@ publish_to: "none"
 version: 3.0.0
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
-  flutter: ">=2.0.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
@@ -37,8 +37,9 @@ flutter:
   assets:
     - assets/audios/
     - assets/images/
+    - assets/fonts/
 
   fonts:
     - family: AssetAudioPlayer
       fonts:
-        - asset: fonts/AssetAudioPlayer.ttf
+        - asset: assets/fonts/AssetAudioPlayer.ttf
